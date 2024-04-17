@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Nav } from "@/components/nav";
 
-const inter = Inter({ subsets: ["latin"] });
+const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "PomoPeer",
@@ -16,7 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-background`}>{children}</body>
+      <ThemeProvider attribute="class" defaultTheme="system">
+        <body
+          className={`${outfit.className} flex flex-col h-[100svh] w-full overflow-y-auto bg-background`}
+        >
+          <Nav />
+          <main className="pt-16">{children}</main>
+        </body>
+      </ThemeProvider>
     </html>
   );
 }
