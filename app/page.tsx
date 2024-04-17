@@ -5,24 +5,36 @@ import TimerDisplay from "@/components/TimerDisplay";
 import PomodoroTimer from "@/components/PomodoroTimer";
 import { Button } from "@/components/ui/button";
 
+import { supabase } from "@/config/supabaseConfig";
+
 const socket = io("http://localhost:3000");
 
 const App: React.FC = () => {
   const [timers, setTimers] = useState<{ [key: string]: any }>({});
 
   useEffect(() => {
-    // Request the current timers when the component mounts
-    socket.emit("request timers");
+    // // Request the current timers when the component mounts
+    // socket.emit("request timers");
+    // // Update state when a timer update is received
+    // socket.on("timer update", (data) => {
+    //   setTimers(data);
+    // });
+    // // Clean up the event listener when the component unmounts
+    // return () => {
+    //   socket.off("timer update");
+    // };
 
-    // Update state when a timer update is received
-    socket.on("timer update", (data) => {
-      setTimers(data);
-    });
+    async function fetchData() {
+      try {
+        const { data, error } = await supabase.from("user").select();
 
-    // Clean up the event listener when the component unmounts
-    return () => {
-      socket.off("timer update");
-    };
+        console.log("data", data);
+        console.log("error", error);
+      } catch (error) {
+        console.error("error", error);
+      }
+    }
+    fetchData();
   }, []);
 
   return (
@@ -32,6 +44,7 @@ const App: React.FC = () => {
       <Button variant={"default"} size={"sm"}>
         Click me
       </Button>
+      Hello World
     </div>
   );
 };
