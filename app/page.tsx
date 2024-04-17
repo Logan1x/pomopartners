@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import TimerDisplay from "@/components/TimerDisplay";
 import PomodoroTimer from "@/components/PomodoroTimer";
+import { Button } from "@/components/ui/button";
 
 const socket = io("http://localhost:3000");
 
@@ -26,8 +27,11 @@ const App: React.FC = () => {
 
   return (
     <div className="h-screen flex flex-col">
-      <TimerDisplay timers={timers} />
-      <PomodoroTimer />
+      {/* <TimerDisplay timers={timers} />
+      <PomodoroTimer /> */}
+      <Button variant={"default"} size={"sm"}>
+        Click me
+      </Button>
     </div>
   );
 };
