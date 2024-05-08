@@ -6,6 +6,9 @@ import PomodoroTimer from "@/components/PomodoroTimer";
 import { Button } from "@/components/ui/button";
 
 import { supabase } from "@/config/supabaseConfig";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { useRouter } from "next/navigation";
 
 const App: React.FC = () => {
   const [timers, setTimers] = useState<{ [key: string]: any }>({});
@@ -33,47 +36,25 @@ const App: React.FC = () => {
   //   // fetchData();
   // }, []);
 
-  const handleAnonymousLogin = async () => {
-    try {
-      const { data, error } = await supabase.auth.signInAnonymously();
-      console.log("error", error);
-    } catch (error) {
-      console.error("error", error);
+  const router = useRouter();
+
+  supabase.auth.onAuthStateChange(async (event) => {
+    if (event == "SIGNED_IN") {
+      router.push("/dashboard");
     }
-  };
-
-  const handleGithubLogin = async () => {
-    try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "github",
-      });
-
-      console.log("data", data);
-      console.log("error", error);
-    } catch (error) {
-      console.error("error", error);
-    }
-  };
-
-  async function signOut() {
-    const { error } = await supabase.auth.signOut();
-    setUData(null);
-  }
+  });
 
   return (
     <div className="h-screen flex gap-4 m-2">
       {/* <TimerDisplay timers={timers} />
       <PomodoroTimer /> */}
 
-      <Button variant={"default"} size={"sm"} onClick={handleAnonymousLogin}>
-        Login Anonymously
-      </Button>
-      <Button variant={"default"} size={"sm"} onClick={handleGithubLogin}>
-        Login with Github
-      </Button>
-      <Button variant={"default"} size={"sm"} onClick={signOut}>
-        Sign Out
-      </Button>
+      <Auth
+        supabaseClient={supabase}
+        providers={["github"]}
+        appearance={{ theme: ThemeSupa }}
+        onlyThirdPartyProviders
+      />
     </div>
   );
 };
